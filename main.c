@@ -429,8 +429,12 @@ static void mwl_set_ht_caps(struct mwl_priv *priv,
 	band->ht_cap.cap |= IEEE80211_HT_CAP_SGI_20;
 	band->ht_cap.cap |= IEEE80211_HT_CAP_SGI_40;
 
-	ieee80211_hw_set(hw, AMPDU_AGGREGATION);
-	ieee80211_hw_set(hw, SUPPORTS_AMSDU_IN_AMPDU);
+	//Fix for kernels prior to 4.2.0
+	//ieee80211_hw_set(hw, AMPDU_AGGREGATION);
+	hw->flags |= IEEE80211_HW_AMPDU_AGGREGATION;
+	//ieee80211_hw_set(hw, SUPPORTS_AMSDU_IN_AMPDU);
+	hw->flags |= IEEE80211_HW_SUPPORTS_AMSDU_IN_AMPDU;
+
 	band->ht_cap.ampdu_factor = IEEE80211_HT_MAX_AMPDU_64K;
 	band->ht_cap.ampdu_density = IEEE80211_HT_MPDU_DENSITY_4;
 
@@ -597,16 +601,23 @@ static int mwl_wl_init(struct mwl_priv *priv)
 	hw->queues = SYSADPT_TX_WMM_QUEUES;
 
 	/* Set rssi values to dBm */
-	ieee80211_hw_set(hw, SIGNAL_DBM);
-	ieee80211_hw_set(hw, HAS_RATE_CONTROL);
+	//Fix for kernels prior to 4.2.0
+	//ieee80211_hw_set(hw, SIGNAL_DBM);
+	hw->flags |= IEEE80211_HW_SIGNAL_DBM;
+	//ieee80211_hw_set(hw, HAS_RATE_CONTROL);
+	hw->flags |= IEEE80211_HW_HAS_RATE_CONTROL;
 
 	/* Ask mac80211 not to trigger PS mode
 	 * based on PM bit of incoming frames.
 	 */
-	ieee80211_hw_set(hw, AP_LINK_PS);
+	//Fix for kernels prior to 4.2.0
+	//ieee80211_hw_set(hw, AP_LINK_PS);
+	hw->flags |= IEEE80211_HW_AP_LINK_PS;
 
-	ieee80211_hw_set(hw, SUPPORTS_PER_STA_GTK);
-	ieee80211_hw_set(hw, MFP_CAPABLE);
+	//ieee80211_hw_set(hw, SUPPORTS_PER_STA_GTK);
+	hw->flags |= IEEE80211_HW_SUPPORTS_PER_STA_GTK;
+	//ieee80211_hw_set(hw, MFP_CAPABLE);
+	hw->flags |= IEEE80211_HW_MFP_CAPABLE;
 
 	hw->wiphy->flags |= WIPHY_FLAG_IBSS_RSN;
 	hw->wiphy->flags |= WIPHY_FLAG_HAS_CHANNEL_SWITCH;
